@@ -10,8 +10,8 @@ LAT = '52.252440'
 LON = '21.037042'
 
 
-
-def get_weather(lat : str, lon : str, **params) -> List[Dict[str, Any]]:
+@st.cache_data(ttl = 3600)
+def get_weather_api(lat : str, lon : str, **params) -> List[Dict[str, Any]]:
     """Get weather forecast data from the OpenWeather API. Return data as list of dictionaries"""
 
     api_key = st.secrets["OPEN_WEATHER_API"]
@@ -43,6 +43,7 @@ def parse_response(response : requests.models.Response) -> list:
                 ,"temp"         : item["main"]["temp"]
                 ,"weather"      : item["weather"][0]["main"]
                 ,"weather_desc" : item["weather"][0]["description"]
+                ,"weather_icon" : item["weather"][0]["icon"]
                 ,"cloudiness_%" : item["clouds"]["all"]
                 ,"wind_speed"   : item["wind"]["speed"]
                 ,"visibility"   : item["visibility"]
